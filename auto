@@ -18,5 +18,5 @@ while true; do
     git push origin main
 
     # Tunggu 5 menit sebelum commit berikutnya
-    sleep 30
+    sleep 130
 done
