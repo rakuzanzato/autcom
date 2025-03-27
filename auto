@@ -1,0 +1,22 @@
+#!/bin/bash
+
+# Path ke repo
+REPO_PATH="/root/projekbaru"  # Ganti sesuai lokasi repo lu
+cd $REPO_PATH || exit
+
+while true; do
+    # Buat perubahan kecil di repo
+    echo "$(date)" >> auto_commit_log.txt
+
+    # Tambahkan perubahan ke Git
+    git add .
+
+    # Commit dengan pesan otomatis
+    git commit -m "Auto commit: $(date)"
+
+    # Push ke GitHub
+    git push origin main
+
+    # Tunggu 5 menit sebelum commit berikutnya
+    sleep 30
+done
