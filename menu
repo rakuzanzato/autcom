@@ -1,0 +1,37 @@
+#!/bin/bash
+
+# Path ke repository (sesuaikan dengan repo lo)
+REPO_PATH="/root/projekbaru"
+cd $REPO_PATH || { echo "Repo tidak ditemukan!"; exit 1; }
+
+# Menu interaktif
+echo "🔥 Auto Commit Bot - Setting 🔥"
+read -p "Masukkan jumlah commit per hari (max 500): " MAX_COMMITS
+read -p "Masukkan delay antar commit (dalam menit): " DELAY_MIN
+
+# Konversi delay ke detik
+DELAY_SEC=$((DELAY_MIN * 60))
+
+# Inisialisasi counter commit
+COUNT=0
+
+# Looping auto-commit
+while [ $COUNT -lt $MAX_COMMITS ]; do
+    # Tambahkan perubahan kecil ke file log
+    echo "$(date)" >> auto_commit_log.txt
+
+    # Commit ke Git
+    git add .
+    git commit -m "Auto commit: $(date)"
+    git push origin main
+
+    # Tambah counter commit
+    COUNT=$((COUNT+1))
+    echo "✅ Commit ke-$COUNT berhasil!"
+
+    # Tunggu sebelum commit berikutnya
+    sleep $DELAY_SEC
+done
+
+echo "✅ Sudah mencapai $MAX_COMMITS commit. Program berhenti."
+
