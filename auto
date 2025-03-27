@@ -1,22 +1,28 @@
 #!/bin/bash
 
 # Path ke repo
-REPO_PATH="/root/projekbaru"  # Ganti sesuai lokasi repo lu
+REPO_PATH="/root/projekbaru"
 cd $REPO_PATH || exit
 
-while true; do
+# Inisialisasi counter commit
+COUNT=0
+MAX_COMMITS=500  # Batas commit per hari
+
+while [ $COUNT -lt $MAX_COMMITS ]; do
     # Buat perubahan kecil di repo
     echo "$(date)" >> auto_commit_log.txt
 
     # Tambahkan perubahan ke Git
     git add .
-
-    # Commit dengan pesan otomatis
     git commit -m "Auto commit: $(date)"
-
-    # Push ke GitHub
     git push origin main
 
-    # Tunggu 5 menit sebelum commit berikutnya
-    sleep 130
+    # Tambah counter commit
+    COUNT=$((COUNT+1))
+    echo "Commit ke-$COUNT berhasil!"
+
+    # Tunggu 3 menit sebelum commit berikutnya
+    sleep 180
 done
+
+echo "✅ Sudah mencapai 500 commit hari ini. Program berhenti."
