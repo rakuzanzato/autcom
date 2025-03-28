@@ -28,6 +28,6 @@ jobs:
             echo "Random commit $i on $(date)" >> random.txt
             git add random.txt
             git commit -m "Random commit #$i"
-            sleep $((RANDOM % 20 + 10))  # Delay 10-30 detik
+            sleep 300  # Delay 5 menit (300 detik) per commit
           done
           git push
