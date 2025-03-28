@@ -1,0 +1,33 @@
+name: Random Daily Commits
+
+on:
+  schedule:
+    - cron: "0 0 * * *"  # Jalan tiap hari jam 00:00 (UTC)
+  workflow_dispatch:
+
+jobs:
+  random-commits:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set Up Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Generate Random Number of Commits
+        id: random
+        run: echo "count=$((RANDOM % 251 + 50))" >> $GITHUB_ENV
+
+      - name: Start Random Commits
+        run: |
+          for i in $(seq 1 $count); do
+            echo "Random commit $i on $(date)" >> random.txt
+            git add random.txt
+            git commit -m "Random commit #$i"
+            sleep $((RANDOM % 20 + 10))  # Delay 10-30 detik
+          done
+          git push
