@@ -5,7 +5,7 @@ on:
     branches: [main] # Ensures the workflow triggers on pushes to main
 
   schedule:
-    - cron: '0 0 * * *' # Executes every day at midnight
+    - cron: '0 */12 * * *' # Executes every 12 hours
 
   workflow_dispatch: # Allows manual triggering from the GitHub UI
 
@@ -37,22 +37,20 @@ jobs:
           git config user.email "harismanciripto111@gmail.com"
           git config user.name "harismanciripto111"
 
-      - name: Prepare Random Number of Commits
-        id: random
-        run: echo "count=$((RANDOM % 51 + 50))" >> $GITHUB_ENV
-
-      - name: Start Random Commits
+      - name: Prepare Commit
         run: |
-          for i in $(seq 1 $count); do
-            echo "Random commit $i on $(date)" >> random.txt
-            git add random.txt
-            git commit -m "Random commit #$i"
-            sleep 300  # Delay 5 minutes per commit
-          done
-          git push
+          commit_messages=("Update: ⏰" "Refresh: 🔄" "Renew: 🌟" "Revise: 📝" "Amend: 🛠" "Adjust: 🔧" "Change: 📈" "Modify: 🖊" "Transform: 🌀" "Revamp: 🌈")
+          random_msg=${commit_messages[$RANDOM % ${#commit_messages[@]}]}
+
+          git add TIMESTAMP.txt
+          git commit -m "$random_msg - $current_time" || echo "No changes to commit."
 
       - name: GitHub Push
         uses: ad-m/github-push-action@v0.6.0
         with:
           directory: '.'
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Changes
+        run: |
+          git push
